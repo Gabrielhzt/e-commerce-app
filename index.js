@@ -1,11 +1,17 @@
-const express = require('express')
-const app = express()
-const port = 3000
+const express = require('express');
+const app = express();
+const cors = require("cors");
+const pool = require("./db");
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+app.use(cors());
+app.use(express.json());
+
+const port = process.env.PORT || 3000;
+
+//ROUTES//
+
+
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+    console.log(`Server has started on port ${port}`);
+});
