@@ -1,0 +1,209 @@
+openapi: 3.0.0
+info:
+  title: e-commerce
+  description: API documentation for Your Application
+  version: 1.0.0
+
+paths:
+  /products:
+    get:
+      summary: Get all products
+      responses:
+        '200':
+          description: Successful response
+
+  /products/{id}:
+    get:
+      summary: Get a specific product
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Product ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+
+  /account/{id}:
+    get:
+      summary: Get account information
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: User ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+
+  /account/update/{id}:
+    put:
+      summary: Update account information
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: User ID
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+
+  /account/delete/{id}:
+    delete:
+      summary: Delete user account
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: User ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+
+  /order-details/{order_id}:
+    get:
+      summary: Get order details for a specific order
+      parameters:
+        - in: path
+          name: order_id
+          required: true
+          description: Order ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+
+  /cart/create:
+    post:
+      summary: Create a new cart (order)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+      responses:
+        '200':
+          description: Successful response
+
+  /cart/add-product:
+    post:
+      summary: Add a product to the cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                product_id:
+                  type: integer
+                quantity:
+                  type: integer
+      responses:
+        '200':
+          description: Successful response
+
+  /cart/delete-product:
+    delete:
+      summary: Delete a product from the cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  type: integer
+      responses:
+        '200':
+          description: Successful response
+
+  /cart/order/{order_id}:
+    put:
+      summary: Validate the order
+      parameters:
+        - in: path
+          name: order_id
+          required: true
+          description: Order ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+
+  /past-order/{id}:
+    get:
+      summary: Get past orders for a user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: User ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+
+  /register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+
+  /login:
+    post:
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+
