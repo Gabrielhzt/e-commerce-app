@@ -172,6 +172,19 @@ app.delete("/cart/delete-product", async (req, res) => {
     }
 });
 
+//Validate the order
+app.put("/cart/order/:order_id", async (req, res) => {
+    try {
+        const { order_id } = req.params;
+        const validate = await pool.query("UPDATE orders SET status = 'close' WHERE order_id = $1", [order_id]);
+
+        res.json("Your order is validated");
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ error: 'Server Error' });
+    }
+});
+
 
 
 
