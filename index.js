@@ -12,6 +12,33 @@ const port = process.env.PORT || 3000;
 
 //ROUTES//
 
+//get all products
+app.get("/products", async (req, res) => {
+    try {
+        const allProduct = await pool.query("SELECT * FROM products");
+        res.json(allProduct.rows);
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+//get a product
+
+//get account info
+
+//update account info
+
+//delete account
+
+//get cart
+
+//update cart
+
+//delete cart
+
+
+
+
 app.post('/register', async (req, res) => {
     try {
         const { username, password } = req.body;
