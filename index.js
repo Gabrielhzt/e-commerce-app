@@ -24,6 +24,17 @@ app.get("/products", async (req, res) => {
 
 //get a product
 
+app.get("/products/:id", async(req, res) => {
+    try {
+        const { id } = req.params;
+        const product = await pool.query("SELECT * FROM products WHERE product_id = $1", [id]);
+
+        res.json(product.rows[0]);
+    } catch (err) {
+        console.error(err.message);
+    }
+})
+
 //get account info
 
 //update account info
