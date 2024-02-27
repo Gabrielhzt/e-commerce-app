@@ -90,8 +90,20 @@ app.delete("/account/delete/:id", async (req, res) => {
 
 
 //get cart
+app.get("/cart/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const cart = await pool.query("SELECT * FROM CART WHERE user_id = $1", [id]);
 
-//update cart
+        res.json(cart.rows);
+    } catch (err) {
+        console.error(err.message);
+    }
+})
+
+//add cart
+
+
 
 //delete cart
 
@@ -111,7 +123,7 @@ app.post('/register', async (req, res) => {
             [username, hashedPassword]
         );
 
-        res.json(newUser.rows[0]);
+        res.json("Your account is created");
     } catch (error) {
         console.error(error.message);
         res.status(500).send('Server Error');
