@@ -48,6 +48,28 @@ app.get("/account/:id", async (req, res) => {
 })
 
 //update account info
+app.put("/account/update/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { username } = req.body;
+
+        const updateAccount = await pool.query(
+            "UPDATE users SET username = $1 WHERE user_id = $2 RETURNING *",
+            [username, id]
+        );
+
+        if (updateAccount.rows.length === 0) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.json({ message: "Your username was updated!", updatedUser: updateAccount.rows[0] });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ error: "Server Error" });
+    }
+});
+
+
 
 //delete account
 
