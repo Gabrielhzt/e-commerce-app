@@ -69,9 +69,25 @@ app.put("/account/update/:id", async (req, res) => {
     }
 });
 
-
-
 //delete account
+app.delete("/account/delete/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deleteUser = await pool.query("DELETE FROM users WHERE user_id = $1", [id]);
+
+        if (deleteUser.rowCount === 0) {
+            // No user found with the given ID
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // Successful deletion
+        res.json({ message: "Your account was successfully deleted" });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ error: "Server Error" });
+    }
+});
+
 
 //get cart
 
