@@ -90,33 +90,75 @@ app.delete("/account/delete/:id", async (req, res) => {
 
 
 //get cart
-app.get("/cart/:id", async (req, res) => {
+app.get('/order-details/:order_id', async (req, res) => {
     try {
-        const { id } = req.params;
-        const cart = await pool.query("SELECT * FROM CART WHERE user_id = $1", [id]);
-
-        res.json(cart.rows);
-    } catch (err) {
-        console.error(err.message);
-    }
-})
-
-//add in the cart
-app.post("/cart/update", async (req, res) => {
-    try {
-        const { user_id, product_id, quantity } = req.body;
-        const cart = await pool.query(
-            "INSERT INTO cart (user_id, product_id, quantity) VALUES ($1, $2, $3)",
-            [user_id, product_id, quantity]
+        const { order_id } = req.params;
+        
+        // Retrieve order details based on the order_id
+        const orderDetails = await pool.query(
+            'SELECT * FROM orderdetails WHERE order_id = $1',
+            [order_id]
         );
 
-        res.json("The product was added to your cart");
+        res.json(orderDetails.rows);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ error: "Server Error" });
+        res.status(500).json({ error: 'Server Error' });
     }
 });
 
+
+//create cart
+app.post("/cart/create", async (req, res) => {
+    try {
+        const { user_id } = req.body;
+        const cart = await pool.query("INSERT INTO orders (user_id) VALUES ($1)", [user_id]);
+
+        res.json("Your cart is created!")
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+
+
+//add products in the cart
+app.post('/cart/add-product', async (req, res) => {
+    try {
+        const { user_id, product_id, quantity } = req.body;
+
+        // Check if there's an open order for the user
+        const openOrder = await pool.query(
+            'SELECT order_id FROM orders WHERE user_id = $1 AND status = $2',
+            [user_id, 'open']
+        );
+
+        let order_id;
+
+        if (openOrder.rows.length > 0) {
+            // If open order exists, use its order_id
+            order_id = openOrder.rows[0].order_id;
+        } else {
+            // If no open order, create a new one and retrieve order_id
+            const newOrder = await pool.query(
+                'INSERT INTO orders (user_id, status) VALUES ($1, $2) RETURNING order_id',
+                [user_id, 'open']
+            );
+            order_id = newOrder.rows[0].order_id;
+        }
+
+        // Insert the product into orderdetails using the retrieved order_id
+        await pool.query(
+            'INSERT INTO orderdetails (product_id, quantity, order_id) VALUES ($1, $2, $3)',
+            [product_id, quantity, order_id]
+        );
+
+        res.json({ message: 'Product added to order successfully', order_id });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ error: 'Server Error' });
+    }
+});
 
 //delete cart
 
