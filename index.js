@@ -101,8 +101,21 @@ app.get("/cart/:id", async (req, res) => {
     }
 })
 
-//add cart
+//add in the cart
+app.post("/cart/update", async (req, res) => {
+    try {
+        const { user_id, product_id, quantity } = req.body;
+        const cart = await pool.query(
+            "INSERT INTO cart (user_id, product_id, quantity) VALUES ($1, $2, $3)",
+            [user_id, product_id, quantity]
+        );
 
+        res.json("The product was added to your cart");
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ error: "Server Error" });
+    }
+});
 
 
 //delete cart
