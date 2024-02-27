@@ -185,6 +185,18 @@ app.put("/cart/order/:order_id", async (req, res) => {
     }
 });
 
+//See all the past order
+app.get("/past-order/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const allOrder = await pool.query("SELECT * FROM orders WHERE user_id = $1", [id]);
+
+        res.json(allOrder.rows);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ error: 'Server Error' });
+    }
+});
 
 
 
