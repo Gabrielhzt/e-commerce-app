@@ -160,7 +160,17 @@ app.post('/cart/add-product', async (req, res) => {
     }
 });
 
-//delete cart
+//delete product in the cart
+app.delete("/cart/delete-product", async (req, res) => {
+    try {
+        const {product_id} = req.body;
+        const deleteproduct = await pool.query("DELETE FROM orderdetails WHERE product_id = $1", [product_id]);
+
+        res.json("The product was succesfully deleted!");
+    } catch (err) {
+        console.error(err.message);
+    }
+});
 
 
 
